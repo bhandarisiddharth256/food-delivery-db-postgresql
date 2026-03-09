@@ -47,3 +47,38 @@ CREATE TABLE restaurants (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE restaurant_categories (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    name TEXT UNIQUE NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE restaurant_category_mapping (
+    restaurant_id UUID REFERENCES restaurants(id) ON DELETE CASCADE,
+    
+    category_id UUID REFERENCES restaurant_categories(id) ON DELETE CASCADE,
+    
+    PRIMARY KEY (restaurant_id, category_id)
+);
+
+CREATE TABLE menu_items (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    restaurant_id UUID REFERENCES restaurants(id) ON DELETE CASCADE,
+
+    name TEXT NOT NULL,
+
+    description TEXT,
+
+    price NUMERIC(10,2) NOT NULL CHECK (price > 0),
+
+    category TEXT,
+
+    is_available BOOLEAN DEFAULT TRUE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
