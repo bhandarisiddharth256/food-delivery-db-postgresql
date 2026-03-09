@@ -165,3 +165,32 @@ CREATE TABLE deliveries (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE reviews (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+
+    restaurant_id UUID REFERENCES restaurants(id) ON DELETE CASCADE,
+
+    order_id UUID REFERENCES orders(id),
+
+    rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+
+    comment TEXT,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE coupons (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    code TEXT UNIQUE NOT NULL,
+
+    discount_amount NUMERIC(10,2) NOT NULL CHECK (discount_amount >= 0),
+
+    min_order_value NUMERIC(10,2) DEFAULT 0,
+
+    expiry_date TIMESTAMP,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
