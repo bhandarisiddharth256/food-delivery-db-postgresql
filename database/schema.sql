@@ -134,3 +134,33 @@ CREATE TABLE order_status_history (
 
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE delivery_partners (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    name TEXT NOT NULL,
+
+    phone TEXT UNIQUE NOT NULL,
+
+    vehicle_number TEXT UNIQUE,
+
+    is_available BOOLEAN DEFAULT TRUE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE deliveries (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+
+    delivery_partner_id UUID REFERENCES delivery_partners(id),
+
+    status delivery_status DEFAULT 'assigned',
+
+    pickup_time TIMESTAMP,
+
+    delivered_time TIMESTAMP,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
