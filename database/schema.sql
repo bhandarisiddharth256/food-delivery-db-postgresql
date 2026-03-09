@@ -81,4 +81,56 @@ CREATE TABLE menu_items (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE orders (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+
+    restaurant_id UUID REFERENCES restaurants(id) ON DELETE CASCADE,
+
+    address_id UUID REFERENCES addresses(id),
+
+    status order_status DEFAULT 'pending',
+
+    total_amount NUMERIC(10,2) NOT NULL CHECK (total_amount >= 0),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_items (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+
+    menu_item_id UUID REFERENCES menu_items(id),
+
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+
+    price NUMERIC(10,2) NOT NULL CHECK (price >= 0)
+);
+
+CREATE TABLE payments (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+
+    amount NUMERIC(10,2) NOT NULL CHECK (amount >= 0),
+
+    payment_method payment_method NOT NULL,
+
+    payment_status payment_status DEFAULT 'pending',
+
+    transaction_id TEXT,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_status_history (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+
+    status order_status NOT NULL,
+
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
