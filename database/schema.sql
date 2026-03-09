@@ -164,3 +164,4 @@ CREATE TABLE deliveries (
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
